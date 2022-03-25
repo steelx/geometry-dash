@@ -125,12 +125,16 @@ public class Window extends JFrame implements Runnable {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            // test Key listeners
-            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
-                System.out.println("Space key was pressed!");
-            }
+            update();
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
+        }
+    }
+
+    public void update() {
+        // test Key listeners
+        if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
+            System.out.println("Space key was pressed!");
         }
     }
 }

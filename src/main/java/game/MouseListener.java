@@ -12,7 +12,7 @@ public class MouseListener extends MouseAdapter {
     public static MouseListener instance;
     private double scrollX, scrollY;
     private double xPos, yPos, lastX, lastY;
-    private boolean mouseButtonPressed[] = new boolean[3];
+    private boolean mouseButtonPressed[] = new boolean[GLFW.GLFW_MOUSE_BUTTON_LAST];
     private boolean isDragging;
 
     private MouseListener() {
