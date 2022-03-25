@@ -2,18 +2,14 @@ package game;
 
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.MemoryStack;
 
 import javax.swing.JFrame;
 
-import java.nio.IntBuffer;
-
+import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
-import static org.lwjgl.system.MemoryStack.*;
 
 public class Window extends JFrame implements Runnable {
     private final int width, height;
@@ -41,6 +37,14 @@ public class Window extends JFrame implements Runnable {
 
         init();
         loop();
+
+        // Free memory
+        glfwFreeCallbacks(glfwWindow);
+        glfwDestroyWindow(glfwWindow);
+
+        // Free error callbacks
+        glfwTerminate();
+        glfwSetErrorCallback(null).free();
     }
 
     public void init() {
@@ -63,11 +67,13 @@ public class Window extends JFrame implements Runnable {
             throw new RuntimeException("Failed to create the GLFW window");
         }
 
+        // Mouse Listener
+        glfwSetCursorPosCallback(glfwWindow, MouseListener::cursorPosCallback);
+        glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
+        glfwSetScrollCallback(glfwWindow, MouseListener::scrollCallback);
+
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        glfwSetKeyCallback(glfwWindow, (window, key, scancode, action, mods) -> {
-            if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-        });
+        glfwSetKeyCallback(glfwWindow, KeyListener::keyCallback);
 
         /*
         // Get the thread stack and push a new frame
@@ -118,6 +124,11 @@ public class Window extends JFrame implements Runnable {
             glfwPollEvents();
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+
+            // test Key listeners
+            if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
+                System.out.println("Space key was pressed!");
+            }
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
         }
