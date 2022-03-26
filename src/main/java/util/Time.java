@@ -6,7 +6,7 @@ public class Time {
     /**
      * getTime in nano seconds
      * **/
-    public static double getTime() {
-        return (System.nanoTime() - timeStarted) * 1E-9;// E1-9 = 0.000000001
+    public static float getTime() {
+        return (float)((System.nanoTime() - timeStarted) * 1E-9);// E1-9 = 0.000000001
     }
 }

@@ -3,6 +3,7 @@ package game;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.*;
+import util.Time;
 
 import javax.swing.JFrame;
 
@@ -116,6 +117,8 @@ public class Window extends JFrame implements Runnable {
         // Set the clear color
         glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
 
+        float endTime, beginTime = Time.getTime();
+
         // Run the rendering loop until the user has attempted to close
         // the window or has pressed the ESCAPE key.
         while (!glfwWindowShouldClose(glfwWindow)) {
@@ -125,13 +128,17 @@ public class Window extends JFrame implements Runnable {
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            update();
+            endTime = Time.getTime();
+            float dt = endTime - beginTime;
+            update(dt);
 
             glfwSwapBuffers(glfwWindow); // swap the color buffers
+
+            beginTime = endTime;
         }
     }
 
-    public void update() {
+    public void update(float dt) {
         // test Key listeners
         if (KeyListener.isKeyPressed(GLFW_KEY_SPACE)) {
             System.out.println("Space key was pressed!");
